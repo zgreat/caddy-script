@@ -267,7 +267,7 @@ function install_caddy()
   echo "Setting up directories for ${domain}"
   runuser -l caddy -c "mkdir log/${domain}"
   mkdir /var/www/"${domain}"
-  if [ "$wordpress" = 0 ] && [ "$shopware" = 0 ]; then
+  if [ "$wordpress" = 0 ] && [ "$shopware" = 0 ] && [ "$ghost" = 0 ]; then
     echo '<html lang="en"><head><title>Hello World</title></head><body>Hello World</body></html>' > /var/www/"${domain}"/index.html
   fi
 }
@@ -495,6 +495,25 @@ function install_wordpress()
   fi
 }
 
+function install_ghost()
+{
+  if [[ "$ghost" = 1 ]]; then
+    echo "Installing Node.js"
+    if [ -z "$NODE_DISTRO" ]; then
+      curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    else
+      curl --silent https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+      echo "deb https://deb.nodesource.com/node_6.x $NODE_DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+      echo "deb-src https://deb.nodesource.com/node_6.x $NODE_DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+    fi
+    apt-get update
+    sudo apt-get install -y nodejs
+    echo "Installing Ghost"
+    sudo npm i -g ghost-cli
+    sudo -u caddy ghost install --dir=/var/www/"${domain}"
+  fi
+}
+
 function install_shopware()
 {
   if [[ "$shopware" = 1 ]]; then
@@ -689,6 +708,7 @@ install_phpmyadmin
 install_caddy_service
 install_mariadb
 install_wordpress
+install_ghost
 install_shopware
 setup_unattended_upgrades
 finish
