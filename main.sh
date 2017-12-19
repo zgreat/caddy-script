@@ -359,9 +359,9 @@ EOT
 
 function install_php()
 {
-  PHP="php7.1"
-  PHPV="7.1"
-  PHPE="20160303"
+  PHP="php7.2"
+  PHPV="7.2"
+  PHPE="20170718"
     
   echo "Check Packages for updates"
   sudo apt-get update
