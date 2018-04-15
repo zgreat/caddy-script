@@ -1,0 +1,31 @@
+{
+  "name": "kok",
+  "version": "0.0.1",
+  "description": "A command-line tool to manage your server",
+  "main": "lib",
+  "scripts": {
+    "test": "xo lib/*.js"
+  },
+  "bin": {
+    "kok": "lib/cli.js"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vintagesucks/caddy-script.git"
+  },
+  "author": "Nikolas Evers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vintagesucks/caddy-script/issues"
+  },
+  "homepage": "https://github.com/vintagesucks/caddy-script#readme",
+  "dependencies": {
+    "meow": "^4.0.0"
+  }
+}
