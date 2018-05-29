@@ -3,14 +3,6 @@ sudo: required
 services:
   - docker
 
-addons:
-  apt:
-    packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - cmake
-
 env:
   - UBUNTU="16.04" FEATURE="HelloWorld"
   - UBUNTU="16.04" FEATURE="phpMyAdmin"
