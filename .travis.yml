@@ -27,22 +27,8 @@ env:
 
 script:
   - docker build -t caddy-script -f Dockerfiles/$UBUNTU .
-  - docker run caddy-script /bin/bash -c "export TRAVIS_CI=1; export FEATURE=$FEATURE; apt-get update; apt-get install -y curl sudo software-properties-common; bash main.sh"
-
-after_success: |
-  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
-  tar xzf master.tar.gz &&
-  cd kcov-master &&
-  mkdir build &&
-  cd build &&
-  cmake .. &&
-  make &&
-  sudo make install &&
-  cd ../.. &&
-  rm -rf kcov-master &&
-  mkdir -p coverage &&
-  kcov coverage script.sh &&
-  bash <(curl -s https://codecov.io/bash)
+  - ci_env=`bash <(curl -s https://codecov.io/env)`
+  - docker run $ci_env caddy-script /bin/bash -c "export TRAVIS_CI=1; export FEATURE=$FEATURE; apt-get update; apt-get install -y curl sudo software-properties-common; bash main.sh"
 
 notifications:
   email:
