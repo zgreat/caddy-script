@@ -697,7 +697,7 @@ function codecov()
 {
   if [[ $TRAVIS_CI == 1 ]]; then
     echo "Code coverage"
-    sudo apt-get install -y libcurl4-openssl-dev libelf-dev libdw-dev cmake build-essential
+    sudo apt-get install -y libcurl4-openssl-dev libelf-dev libdw-dev cmake build-essential libicu-dev
     wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
     tar xzf master.tar.gz &&
     cd kcov-master &&
