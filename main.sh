@@ -552,7 +552,7 @@ EOT
     sudo service ${PHP}-fpm restart
 
     echo "Installing Shopware via Shopware CLI Tools"
-    sw install:release --release=latest --install-dir=/var/www/"${domain}" --db-user=shopware --db-password="${swdbpass}" --admin-username=admin --admin-password="${swadminpass}" --db-name=shopware --shop-path=CS_SW_PATH_PLACEHOLDER --shop-host="${domain}${port}"
+    sw install:release --release=5.4.5 --install-dir=/var/www/"${domain}" --db-user=shopware --db-password="${swdbpass}" --admin-username=admin --admin-password="${swadminpass}" --db-name=shopware --shop-path=CS_SW_PATH_PLACEHOLDER --shop-host="${domain}${port}"
     mysql -uroot -e "UPDATE shopware.s_core_shops SET base_path = NULL WHERE s_core_shops.id = 1;"
   fi
 }
