@@ -577,7 +577,7 @@ function install_shopware()
     #sw install:release --release=latest --install-dir=/var/www/"${domain}" --db-user=shopware --db-password="${swdbpass}" --admin-username=admin --admin-password="${swadminpass}" --db-name=shopware --shop-path=CS_SW_PATH_PLACEHOLDER --shop-host="${domain}${port}"
     #mysql -uroot -e "UPDATE shopware.s_core_shops SET base_path = NULL WHERE s_core_shops.id = 1;"
 
-    sudo apt install composer nodejs npm
+    sudo apt install composer nodejs npm -y
 
     #sudo apt install chromium-browser
     #sudo apt install default-jre-headless
