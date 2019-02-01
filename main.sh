@@ -380,7 +380,6 @@ function install_php()
     ${PHP}-iconv \
     ${PHP}-pdo \
     ${PHP}-json \
-    ${PHP}-pdo_mysql \
     ${PHP}-simplexml \
     ${PHP}-tokenizer \
     ${PHP}-xmlwriter \
