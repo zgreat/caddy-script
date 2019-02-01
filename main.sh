@@ -583,6 +583,10 @@ function install_shopware()
     #sudo apt install default-jre-headless
 
     git clone https://github.com/shopware/development.git /var/www/"${domain}"
+    sudo php -d memory_limit=-1 `which composer` install --no-dev
+
+    #todo: composer install
+    #todo: route to /public with caddy
   fi
 }
 
