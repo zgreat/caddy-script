@@ -373,7 +373,28 @@ function install_php()
   echo "Check Packages for updates"
   sudo apt-get update
   echo "Installing PHP and extensions"
-  sudo apt-get install ${PHP}-fpm ${PHP}-mysql ${PHP}-curl ${PHP}-intl ${PHP}-mcrypt ${PHP}-mbstring ${PHP}-soap ${PHP}-xml ${PHP}-zip php-memcached memcached -y
+  sudo apt-get -y install \
+    ${PHP}-dom \
+    ${PHP}-fileinfo \
+    ${PHP}-gd \
+    ${PHP}-iconv \
+    ${PHP}-pdo \
+    ${PHP}-json \
+    ${PHP}-pdo_mysql \
+    ${PHP}-simplexml \
+    ${PHP}-tokenizer \
+    ${PHP}-xmlwriter \
+    ${PHP}-fpm \
+    ${PHP}-mysql \
+    ${PHP}-curl \
+    ${PHP}-intl \
+    ${PHP}-mcrypt \
+    ${PHP}-mbstring \
+    ${PHP}-soap \
+    ${PHP}-xml \
+    ${PHP}-zip \
+    php-memcached \
+    memcached
   echo "Configuring PHP Settings for Caddy"
   OLDPHPCONF="listen \= \/run\/php\/php7\.1\-fpm\.sock"
   NEWPHPCONF="listen \= 127\.0\.0\.1\:9000"
@@ -502,58 +523,67 @@ function install_shopware()
 {
   if [[ "$shopware" = 1 ]]; then
     echo "Installing Shopware"
-    swdbpass=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev | cut -b 2- | rev | tr -dc 'a-zA-Z0-9')
+    #swdbpass=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev | cut -b 2- | rev | tr -dc 'a-zA-Z0-9')
+    swdbpass=app
 
-    mysql -uroot -e "create database shopware;"
-    mysql -uroot -e "grant usage on *.* to shopware@localhost identified by '${swdbpass}';"
-    mysql -uroot -e "grant all privileges on shopware.* to shopware@localhost;"
+    #mysql -uroot -e "create database shopware;"
+    #mysql -uroot -e "create database shopware_test;"
+    mysql -uroot -e "grant usage on shopware.* to app@localhost identified by '${swdbpass}';"
+    mysql -uroot -e "grant usage on shopware_test.* to app@localhost identified by '${swdbpass}';"
     mysql -uroot -e "FLUSH PRIVILEGES;"
 
-    swadminpass=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev | cut -b 2- | rev | tr -dc 'a-zA-Z0-9')
+    #swadminpass=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev | cut -b 2- | rev | tr -dc 'a-zA-Z0-9')
 
-    echo "Installing required packages"
-    case $version in
-    16.04)
-        apt install openjdk-9-jre-headless ant unzip -y
-        ;;
-    17.10)
-        apt install openjdk-9-jre-headless ant unzip -y
-        ;;
-    *)
-        apt install ant unzip -y
-    esac
-    echo "Getting sw.phar"
-    curl -o /usr/local/bin/sw https://shopwarelabs.github.io/sw-cli-tools/sw.phar
-    chmod +x /usr/local/bin/sw
+    #echo "Installing required packages"
+    #case $version in
+    #16.04)
+    #    apt install openjdk-9-jre-headless ant unzip -y
+    #    ;;
+    #17.10)
+    #    apt install openjdk-9-jre-headless ant unzip -y
+    #    ;;
+    #*)
+    #    apt install ant unzip -y
+    #esac
+    #echo "Getting sw.phar"
+    #curl -o /usr/local/bin/sw https://shopwarelabs.github.io/sw-cli-tools/sw.phar
+    #chmod +x /usr/local/bin/sw
 
-    echo "Installing Shopware specific PHP extensions"
-    apt-get install ${PHP}-gd wget -y
-    wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
-    tar xvfz ioncube_loaders_lin_x86-64.tar.gz
-    sudo cp ioncube/ioncube_loader_lin_${PHPV}.so /usr/lib/php/${PHPE}/
-    sudo rm ioncube_loaders_lin_x86-64.tar.gz
-    sudo rm -rf ioncube_loaders_lin_x86-64
+    #echo "Installing Shopware specific PHP extensions"
+    #apt-get install ${PHP}-gd wget -y
+    #wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+    #tar xvfz ioncube_loaders_lin_x86-64.tar.gz
+    #sudo cp ioncube/ioncube_loader_lin_${PHPV}.so /usr/lib/php/${PHPE}/
+    #sudo rm ioncube_loaders_lin_x86-64.tar.gz
+    #sudo rm -rf ioncube_loaders_lin_x86-64
 
-    echo "Making Shopware specific php.ini changes"
-    cat <<EOT >> /etc/php/${PHPV}/fpm/php.ini
-zend_extension = "/usr/lib/php/${PHPE}/ioncube_loader_lin_${PHPV}.so"
-EOT
-    OLDMEMORYLIMIT="memory_limit \= 128M"
-    NEWMEMORYLIMIT="memory_limit \= 256M"
-    sudo sed -i "s/${OLDMEMORYLIMIT}/${NEWMEMORYLIMIT}/g" /etc/php/${PHPV}/fpm/php.ini
-    OLDMAXFILESIZE="upload_max_filesize \= 2M"
-    NEWMAXFILESIZE="upload_max_filesize \= 6M"
-    sudo sed -i "s/${OLDMAXFILESIZE}/${NEWMAXFILESIZE}/g" /etc/php/${PHPV}/fpm/php.ini
+    #echo "Making Shopware specific php.ini changes"
+    #cat <<EOT >> /etc/php/${PHPV}/fpm/php.ini
+#zend_extension = "/usr/lib/php/${PHPE}/ioncube_loader_lin_${PHPV}.so"
+#EOT
+    #OLDMEMORYLIMIT="memory_limit \= 128M"
+    #NEWMEMORYLIMIT="memory_limit \= 256M"
+    #sudo sed -i "s/${OLDMEMORYLIMIT}/${NEWMEMORYLIMIT}/g" /etc/php/${PHPV}/fpm/php.ini
+    #OLDMAXFILESIZE="upload_max_filesize \= 2M"
+    #NEWMAXFILESIZE="upload_max_filesize \= 6M"
+    #sudo sed -i "s/${OLDMAXFILESIZE}/${NEWMAXFILESIZE}/g" /etc/php/${PHPV}/fpm/php.ini
 
-    echo "Installing Shopware specific packages"
-    apt-get install libfreetype6 -y
+    #echo "Installing Shopware specific packages"
+    #apt-get install libfreetype6 -y
 
-    echo "Restarting PHP"
-    sudo service ${PHP}-fpm restart
+    #echo "Restarting PHP"
+    #sudo service ${PHP}-fpm restart
 
-    echo "Installing Shopware via Shopware CLI Tools"
-    sw install:release --release=latest --install-dir=/var/www/"${domain}" --db-user=shopware --db-password="${swdbpass}" --admin-username=admin --admin-password="${swadminpass}" --db-name=shopware --shop-path=CS_SW_PATH_PLACEHOLDER --shop-host="${domain}${port}"
-    mysql -uroot -e "UPDATE shopware.s_core_shops SET base_path = NULL WHERE s_core_shops.id = 1;"
+    #echo "Installing Shopware via Shopware CLI Tools"
+    #sw install:release --release=latest --install-dir=/var/www/"${domain}" --db-user=shopware --db-password="${swdbpass}" --admin-username=admin --admin-password="${swadminpass}" --db-name=shopware --shop-path=CS_SW_PATH_PLACEHOLDER --shop-host="${domain}${port}"
+    #mysql -uroot -e "UPDATE shopware.s_core_shops SET base_path = NULL WHERE s_core_shops.id = 1;"
+
+    sudo apt install composer nodejs npm
+
+    #sudo apt install chromium-browser
+    #sudo apt install default-jre-headless
+
+    git clone https://github.com/shopware/development.git /var/www/"${domain}"
   fi
 }
 
