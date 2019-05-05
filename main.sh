@@ -17,21 +17,6 @@ function checkLogfile()
   fi
 }
 
-function readEmail()
-{
-  if [[ $TRAVIS_CI == 1 ]]; then
-    email="travis@example.org"
-  else
-    read -e -p "Enter an email address (e.g. admin@example.org) " -r email
-    if [[ ${#email} -gt 2 ]]; then
-      sleep 0
-    else
-      echo " >> Please enter a valid email address!"
-      readEmail
-    fi
-  fi
-}
-
 function readDomain()
 {
   if [[ $TRAVIS_CI == 1 ]]; then
@@ -204,7 +189,6 @@ function prepare()
   else
     sudo dpkg-reconfigure tzdata
   fi
-  readEmail
   readDomain
   readCaddyExtensions
   readWordPress
